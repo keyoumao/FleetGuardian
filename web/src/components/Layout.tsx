@@ -5,6 +5,7 @@ import { useFleet } from "../data/store";
 
 const nav = [
   { to: "/", label: "Representation ASR", icon: LayoutDashboard, end: true },
+  { to: "/monitor", label: "Live security monitor", icon: ShieldAlert },
   { to: "/runtime", label: "Runtime demo", icon: ShieldAlert },
   { to: "/agents", label: "Agents", icon: Bot },
   { to: "/incidents", label: "Incidents", icon: ShieldAlert },

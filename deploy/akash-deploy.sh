@@ -94,19 +94,29 @@ URL=$(cat "$ROOT/url.txt")
 echo "URL=$URL"
 echo "=== Smoke checks ==="
 curl -sS -I --max-time 30 "$URL" | head -15
-curl -sS --max-time 30 "$URL/schema-audit.json" | python3 - <<'PY'
-import sys, json
-d = json.load(sys.stdin)
+curl -sS --max-time 30 "$URL/schema-audit.json" -o /tmp/fg-schema.json
+python3 - <<'PY'
+import json
+from pathlib import Path
+d = json.loads(Path('/tmp/fg-schema.json').read_text())
 print({k: d.get(k) for k in ('source', 'complete', 'model', 'provider', 'status')})
-print('top_keys', list(d)[:15])
 PY
-curl -sS --max-time 30 "$URL/" | python3 - <<'PY'
-import sys, re
-html = sys.stdin.read()
-print(html[:200])
+curl -sS --max-time 30 -H "Origin: $URL" "$URL/api/monitor/snapshot" -o /tmp/fg-snap.json
+python3 - <<'PY'
+import json
+from pathlib import Path
+d = json.loads(Path('/tmp/fg-snap.json').read_text())
+print('monitor totalEvents', d.get('totalEvents'), 'incidents', len(d.get('incidents', [])), d.get('incidentCounts'))
+PY
+curl -sS --max-time 30 "$URL/" -o /tmp/fg-index.html
+python3 - <<'PY'
+import re
+from pathlib import Path
+html = Path('/tmp/fg-index.html').read_text()
+print(html[:160].replace('\n', ' '))
 m = re.search(r'/assets/[^"\s]+\.js', html)
+Path('/tmp/fg-js-path.txt').write_text(m.group(0) if m else '')
 print('js', m.group(0) if m else 'missing')
-open('/tmp/fg-js-path.txt', 'w').write(m.group(0) if m else '')
 PY
 JS=$(cat /tmp/fg-js-path.txt)
 if [[ -n "$JS" ]]; then

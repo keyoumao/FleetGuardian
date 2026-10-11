@@ -2,7 +2,7 @@ version: "2.0"
 
 services:
   web:
-    image: keyoumao/fleetguardian-asr-demo:20261009
+    image: keyoumao/fleetguardian-asr-demo:20261009-guild-monitor-v2
     expose:
       - port: 80
         as: 80

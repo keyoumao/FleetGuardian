@@ -7,6 +7,7 @@ import HarnessDetail from "./pages/HarnessDetail";
 import Harnesses from "./pages/Harnesses";
 import Incidents from "./pages/Incidents";
 import RepresentationAudit from "./pages/RepresentationAudit";
+import LiveMonitor from "./pages/LiveMonitor";
 import Overview from "./pages/Overview";
 import Policies from "./pages/Policies";
 
@@ -17,6 +18,7 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<RepresentationAudit />} />
+            <Route path="monitor" element={<LiveMonitor />} />
             <Route path="runtime" element={<Overview />} />
             <Route path="agents" element={<Agents />} />
             <Route path="agents/:id" element={<AgentDetail />} />
